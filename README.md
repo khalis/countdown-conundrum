@@ -30,7 +30,7 @@ jeer seer jube jabs jars jaws juba urbs jews swee jees rees sabe ruse rusa rues 
 Enter puzzle:
 ```
 
-To solve numbers puzzle type all numbers with spaces in between, with the goal as the last number. Solver will print first 10 solutions if found.
+To solve numbers puzzle type all numbers with spaces in between, with the goal as the last number. Solver will print first 10 solutions, if found.
 ```
 Enter puzzle: 25 100 1 7 9 5 729
 Found at least 10 solutions
@@ -55,5 +55,5 @@ Requires [{fmt}](https://github.com/fmtlib/fmt) for compilation. [vcpkg](https:/
 
 ## Acknowledgements
 * [{fmt}](https://github.com/fmtlib/fmt) is great
-* @HowardHinnant's [combinations library](https://github.com/HowardHinnant/combinations) is amazing
-* @atebits' [word list](https://github.com/atebits/Words) is indispensable
+* [combinations library](https://github.com/HowardHinnant/combinations) from @HowardHinnant is amazing
+* [word list](https://github.com/atebits/Words) from @atebits is indispensable
