@@ -32,22 +32,22 @@ struct rational {
         b = denum / gcd;
     }
 
-    rational<T> operator+(const rational<T>& rhs) const {
-        const auto& [c, d] = rhs;
+    rational<T> operator+(const rational<T> &rhs) const {
+        const auto&[c, d] = rhs;
         return rational{a * d + c * b, b * d};
     }
 
-    rational<T> operator-(const rational<T>& rhs) const {
+    rational<T> operator-(const rational<T> &rhs) const {
         return *this + rational<T>{-rhs.a, rhs.b};
     }
 
-    rational<T> operator*(const rational<T>& rhs) const {
-        const auto& [c, d] = rhs;
+    rational<T> operator*(const rational<T> &rhs) const {
+        const auto&[c, d] = rhs;
         return rational<T>{a * c, b * d};
     }
 
-    rational<T> operator/(const rational<T>& rhs) const {
-        const auto& [c, d] = rhs;
+    rational<T> operator/(const rational<T> &rhs) const {
+        const auto&[c, d] = rhs;
         return rational<T>{a * d, b * c};
     }
 
@@ -110,6 +110,31 @@ struct expression {
     int width;
     expression_template tmpl;
     std::array<T, Longest_Expression> expr;
+
+
+    bool isEqual(T goal) {
+        std::stack<rational<T>> stack;
+        bool always_whole = true;
+        std::map<
+                std::uint8_t,
+                std::function<rational<T>(rational<T>, rational<T>)>
+        > operators{
+                {0, [](auto a, auto b) { return a + b; }},
+                {1, [](auto a, auto b) { return a - b; }},
+                {2, [](auto a, auto b) { return a * b; }},
+                {3, [](auto a, auto b) { return a / b; }}
+        };
+        traverse(*this,
+                 [&stack](int num) { stack.push(rational<T>{num, 1}); },
+                 [&stack, &operators, &always_whole](int op) {
+                     auto a = pop(stack);
+                     auto b = pop(stack);
+                     stack.push(operators[op](a, b));
+                     always_whole = always_whole && (stack.top().b == 1);
+                 }
+        );
+        return (stack.top() == goal) && always_whole;
+    }
 
     rational<T> eval() {
         std::stack<rational<T>> stack;

@@ -123,7 +123,8 @@ vector<expression<T>> get_expressions(vector<T> &numbers, T goal) {
                              [&num_ind, &num](int &number) { number = static_cast<int>(num[num_ind++]); },
                              [&op_ind, &op](int &opr) { opr = static_cast<int>(op.digits[op_ind++].val); }
                     );
-                    if (expr.eval() == goal) solutions.push_back(expr);
+                    if (expr.isEqual(goal)) solutions.push_back(expr);
+//                    if (expr.eval() == goal) solutions.push_back(expr);
                     if (solutions.size() == 10) return solutions;
 
                     if (std::all_of(begin(op.digits), begin(op.digits) + op.width, [](Digit el) {
