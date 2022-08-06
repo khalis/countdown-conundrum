@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include <bitset>
+#include <sstream>
 
 #include <fmt/core.h>
 #include <fmt/ostream.h>
