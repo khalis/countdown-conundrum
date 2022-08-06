@@ -159,10 +159,9 @@ struct expression {
     }
 
     std::string infix() {
-        using namespace fmt::literals;
         std::stack<std::pair<std::string, int>> stack;
         traverse(*this,
-                 [&stack](int num) { stack.push({"{}"_format(num), 0}); },
+                 [&stack](int num) { stack.push( {fmt::format("{}", num), 0} ); },
                  [&stack](int op) {
                      std::string result;
                      auto[b, b_priority] = pop(stack);

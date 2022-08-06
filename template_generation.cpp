@@ -11,8 +11,6 @@
 #include <fmt/core.h>
 #include <fmt/format.h>
 
-using namespace fmt::literals;
-
 #include "utility.h"
 
 /// In the expression 1 -- is a number, 0 is an operation
@@ -45,26 +43,27 @@ std::map<std::uint8_t, std::vector<expression_template>> generate_all_templates(
 };
 
 int main() {
-    std::string prefix = "const map<std::uint8_t, vector<expression_template>> all_templates{";
-    std::string middle = R"foo(
+    using fmt::print, fmt::arg, fmt::format;
+    constexpr auto prefix = "const map<std::uint8_t, vector<expression_template>> all_templates{";
+    constexpr auto middle = R"foo(
         //{key}
         {{{key}, {{ {templates} }} }})foo";
-    std::string postfix = "};\n";
+    constexpr auto postfix = "};\n";
 
     auto all_templates = generate_all_templates();
 
-    fmt::print("{}", prefix);
+    print("{}", prefix);
 
     for (auto key_value = begin(all_templates); key_value != end(all_templates); ++key_value) {
         auto &[key, templates] = *key_value;
         std::string templates_string{};
         for (auto tmpl = begin(templates); tmpl != end(templates); ++tmpl) {
-            templates_string += fmt::format("{:#b}", *tmpl);
+            templates_string += format("{:#b}", *tmpl);
             if (next(tmpl) != end(templates)) templates_string += ", ";
         }
-        fmt::print(middle, "key"_a = key, "templates"_a = templates_string);
-        if (next(key_value) != end(all_templates)) fmt::print(",");
+        print(middle, arg("key", key), arg("templates", templates_string));
+        if (next(key_value) != end(all_templates)) print(",");
     }
-    fmt::print("{}", postfix);
+    print("{}", postfix);
     return 0;
 }
