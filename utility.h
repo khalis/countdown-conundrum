@@ -8,11 +8,25 @@
 #include <numeric>
 #include <tuple>
 #include <functional>
+#include <ostream>
 
 #include <fmt/format.h>
 
 #ifndef COUNTDOWN_GAME_UTILITY_H
 #define COUNTDOWN_GAME_UTILITY_H
+
+
+/// stackoverflow.com/q/101439/
+size_t ipow(size_t base, size_t exp){
+    size_t result = 1;
+    for (;;){
+        if (exp & 1) result *= base;
+        exp >>= 1;
+        if (!exp) return result;
+        base *= base;
+    }
+}
+
 
 const size_t Longest_Expression = 11;
 constexpr size_t Max_Operators = (Longest_Expression - 1) / 2;
@@ -26,7 +40,10 @@ template<typename T>
 struct rational {
     T a, b;
 
-    rational(T num, T denum) {
+    rational(): a{}, b{}{
+    }
+
+    rational(T num, T denum = 1) {
         T gcd = std::gcd(num, denum);
         a = num / gcd;
         b = denum / gcd;
@@ -58,6 +75,12 @@ struct rational {
 
     bool operator==(T rhs) const {
         return a == rhs && b == 1;
+    }
+
+    bool operator <(const rational<T> &rhs) const {
+        const auto&[c, d] = rhs;
+        T lcm = std::lcm(b, d);
+        return a*lcm < c*lcm;
     }
 
 };
