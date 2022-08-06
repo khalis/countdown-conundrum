@@ -1,11 +1,11 @@
 1 2 5 6 25 50 953
-2 3 7 25 100 75 568
-10 9 8 100 75 25 547
 
+2 3 7 25 100 75 568
+
+10 9 8 100 75 25 547
 
 1 6 5 5 25 50 953
 no solutions
-
 
 10 5 9 7 25 75 338
 
@@ -13,3 +13,6 @@ no solutions
 
 9 9 5 1 100 25 527
 Finds solution with fractions
+
+3 1 7 8 100 75 998
+classic version exits without errors, version with drop operator can't find any solutions, while one exists, clearly: (3+7)*(100-1)+8=998
