@@ -12,6 +12,6 @@ target_link_libraries(countdown_conundrum fmt::fmt)
 add_executable(countdown_numbers_test numbers_test.cpp)
 target_link_libraries(countdown_numbers_test fmt::fmt)
 
-add_executable(countdown_template_generation template_generation.cpp)
-target_link_libraries(countdown_template_generation fmt::fmt)
+add_executable(fast_num fast_num.cpp)
+target_link_libraries(fast_num)
 
