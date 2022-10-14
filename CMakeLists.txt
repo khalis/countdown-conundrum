@@ -15,5 +15,3 @@ target_link_libraries(countdown_numbers_test fmt::fmt)
 add_executable(countdown_template_generation template_generation.cpp)
 target_link_libraries(countdown_template_generation fmt::fmt)
 
-add_executable(numbers_drop_operator numbers_drop_operator.cpp)
-target_link_libraries(numbers_drop_operator fmt::fmt)
