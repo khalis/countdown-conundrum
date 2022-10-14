@@ -15,19 +15,6 @@
 #ifndef COUNTDOWN_GAME_UTILITY_H
 #define COUNTDOWN_GAME_UTILITY_H
 
-
-/// stackoverflow.com/q/101439/
-size_t ipow(size_t base, size_t exp){
-    size_t result = 1;
-    for (;;){
-        if (exp & 1) result *= base;
-        exp >>= 1;
-        if (!exp) return result;
-        base *= base;
-    }
-}
-
-
 const size_t Longest_Expression = 11;
 constexpr size_t Max_Operators = (Longest_Expression - 1) / 2;
 
