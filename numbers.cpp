@@ -5,10 +5,14 @@
 #include <string>
 #include <regex>
 #include <bitset>
+#include <mutex>
 #include <sstream>
+#include <chrono>
+#include <execution>
 
 #include <fmt/core.h>
 #include <fmt/ostream.h>
+#include <fmt/chrono.h>
 #include <iostream>
 
 #include "combinations.h"
@@ -25,8 +29,8 @@ using std::size_t;
 
 
 using fmt::print;
-using namespace fmt::literals;
 
+auto now = std::chrono::steady_clock::now;
 
 /// In the expression 1 -- is a number, 0 is an operation
 /// Expression is valid if
@@ -104,6 +108,8 @@ vector<qint> get_operators(size_t Z) {
 template<typename T>
 vector<expression<T>> get_expressions(vector<T> &numbers, T goal) {
     vector<expression<T>> solutions;
+    size_t count_combinations = 0;
+    std::mutex m;
     for (const auto &[N, templates]: all_templates) {
         size_t L = (N + 1u) / 2u;
         if (numbers.size() < L) break;
@@ -113,29 +119,32 @@ vector<expression<T>> get_expressions(vector<T> &numbers, T goal) {
         vector<qint> operators = get_operators(Z);
         vector<vector<int>> permutations = get_permutations(numbers, L);
 
+        // print("templates {}, operators {}, permutations {}, {} \n\n", templates.size(), operators.size(), permutations.size(), L);
+
         for (const auto &tmpl: templates) {
             for (const auto &op: operators) {
-                for (const auto &num: permutations) {
-                    size_t op_ind = 0;
-                    size_t num_ind = 0;
+                // std::for_each(/**/std::execution::par,/**/ begin(permutations), end(permutations), [&, N=N](const auto &num){
+                for (const auto &num: permutations) 
+                    {
+                        // if(count_combinations++ % 225'831 == 0)
+                            // move line up, erase line, move begging of the line
+                            // print("\033[A\33[2K\r{:>3}%\n", count_combinations / 225'831);
+                        size_t op_ind = 0;
+                        size_t num_ind = 0;
 
-                    expression<int> expr{N, tmpl, {}};
+                        expression<int> expr{N, tmpl, {}};
 
-                    traverse(expr,
-                             [&num_ind, &num](int &number) { number = static_cast<int>(num[num_ind++]); },
-                             [&op_ind, &op](int &opr) { opr = static_cast<int>(op.digits[op_ind++].val); }
-                    );
-                    if (expr.isEqual(goal)) solutions.push_back(expr);
-//                    if (expr.eval() == goal) solutions.push_back(expr);
-                    if (solutions.size() == 10) return solutions;
+                        traverse(expr,
+                                [&num_ind, &num](int &number) { number = static_cast<int>(num[num_ind++]); },
+                                [&op_ind, &op](int &opr) { opr = static_cast<int>(op.digits[op_ind++].val); }
+                        );
 
-                    if (std::all_of(begin(op.digits), begin(op.digits) + op.width, [](Digit el) {
-                        return operators_to_char[el.val] == '+' ||
-                               operators_to_char[el.val] == '*';
-                    })) {
-                        break;
-                    };
-                }
+                        if (expr.isEqual(goal)) {
+                            std::lock_guard guard(m);
+                            solutions.push_back(expr);
+                        }
+                    }
+                // });
             }
         }
     }
@@ -193,6 +202,7 @@ void number_conundrum(const string &line) {
 }
 
 int main() {
+    using std::chrono::duration;
     Solver solver;
 
     while (true) {
@@ -203,8 +213,11 @@ int main() {
         if (line.empty()) break;
         if (std::regex_match(line, regex{"[^[:digit:]]+"}))
             words_conundrum(solver, line);
-        else
+        else{
+            auto start = now();
             number_conundrum(line);
+            print("Done in {}\n", duration<double>(now()-start));
+        }
 
     }
     return 0;
