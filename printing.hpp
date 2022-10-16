@@ -13,13 +13,13 @@ struct printing_format {
 
 template <typename... Args>
 void print(std::string_view rt_fmt_str, Args&&... args) {
-    std::cout << std::vformat(rt_fmt_str, std::make_format_args(args...)) << std::endl;
+    std::cout << std::vformat(rt_fmt_str, std::make_format_args(args...));
 }
 
 
 template<typename T>
 void print(T value){
-    print("{}", value);
+    print("{}\n", value);
 }
 
 void print(){
