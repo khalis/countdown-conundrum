@@ -13,5 +13,7 @@ add_executable(countdown_numbers_test numbers_test.cpp)
 target_link_libraries(countdown_numbers_test fmt::fmt)
 
 add_executable(fast_num fast_num.cpp)
-target_link_libraries(fast_num)
+# target_link_libraries(fast_num)
 
+
+add_executable(conundrums conundrums.cpp solver.cpp)
