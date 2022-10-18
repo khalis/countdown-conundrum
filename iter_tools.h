@@ -33,6 +33,7 @@ template <typename Iterator, typename Iterator2, typename Function>
 /// Algorithm uses counting in B-based number system, where B number of elements in input list
 /// 
 
+/// stackoverflow.com/q/101439/
 constexpr size_t ipow(size_t base, size_t exp){
     size_t result = 1;
     for (;;){
