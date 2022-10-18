@@ -102,7 +102,7 @@ Node Node::operator-(){
     return *this;
 }
 
-void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal order = Traversal::post){
+void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal order){
     if(!root) return;
 
     if(order == Traversal::pre && fn(root) == Iteration::finish) return;
@@ -112,7 +112,7 @@ void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal
     if(order == Traversal::post && fn(root) == Iteration::finish) return;
 }
 
-void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order = Traversal::post){
+void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order){
     if(!one || !two) return;
 
     if(order == Traversal::pre && fn(one, two) == Iteration::finish) return;
