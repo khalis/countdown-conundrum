@@ -135,14 +135,12 @@ void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal
     if(order == Traversal::post && fn(root) == Iteration::finish) return;
 }
 
-void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order){
+void sync_traverse(SNode& one, SNode& two, std::function<void(SNode&, SNode&)> fn){
     if(!one || !two) return;
 
-    if(order == Traversal::pre && fn(one, two) == Iteration::finish) return;
-    sync_traverse(one->left, two->left, fn, order);
-    if(order == Traversal::in && fn(one, two) == Iteration::finish) return;
-    sync_traverse(one->right, two->right, fn, order);
-    if(order == Traversal::post && fn(one, two) == Iteration::finish) return;
+    sync_traverse(one->left, two->left, fn);
+    sync_traverse(one->right, two->right, fn);
+    fn(one, two);
 }
 
 void deep_copy(SNode& from, SNode& to){

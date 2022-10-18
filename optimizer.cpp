@@ -62,7 +62,6 @@ bool transform(SNode& node, const Transformation& transform){
         sync_traverse(pattern, matched, [&captures](SNode& pattern, SNode& matched){
             if(pattern->type == Node::glob_var || pattern->type == Node::glob_num)
                 captures.insert({pattern->value, matched});
-            return Iteration::carry_on;
         });
 
         auto new_node = std::make_shared<Node>(*replace);
