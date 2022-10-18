@@ -2,18 +2,15 @@ cmake_minimum_required(VERSION 3.10)
 
 project(countdown_game)
 
-find_package(fmt REQUIRED)
-
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(countdown_conundrum numbers.cpp solver.cpp utility.h)
-target_link_libraries(countdown_conundrum fmt::fmt)
-
-add_executable(countdown_numbers_test numbers_test.cpp)
-target_link_libraries(countdown_numbers_test fmt::fmt)
-
-add_executable(fast_num fast_num.cpp)
-# target_link_libraries(fast_num)
-
-
-add_executable(conundrums conundrums.cpp solver.cpp)
+set(source_files
+    conundrums.cpp
+    solver.h
+    solver.cpp
+    fast_num.h
+    fast_num.cpp
+    printing.hpp
+    utility.h
+)
+add_executable(conundrums ${source_files})
