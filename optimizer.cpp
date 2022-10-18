@@ -169,6 +169,7 @@ void winnow_solutions(std::vector<Solution>& solutions){
         sort_nodes(node);
         sol.infix = node->to_string();
     }
+    std::ranges::sort(solutions, {}, &Solution::infix);
     const auto [first, last] = std::ranges::unique(solutions, {}, &Solution::infix);
     solutions.erase(first, last);
     for(auto& sol: solutions)

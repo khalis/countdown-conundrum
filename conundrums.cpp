@@ -70,7 +70,7 @@ void numbers_conundrum(std::array<int, 7> input, bool verbose = false){
         }
 
     }
-    else for(auto &sol: solutions) print("{}) {}={}\n", sol.ind, sol.infix, goal);
+    else for(auto &sol: solutions) print("{: >4}) {}={}\n", sol.ind, sol.infix, goal);
 }
 
 int main() {
