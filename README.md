@@ -4,7 +4,7 @@ This program is meant for solving puzzles from Countdown game, Channel 4 (8 out 
 
 This solves both letters and numbers puzzles, however there are some parts that can be improved.
 
-Letters puzzle solver relies on a dictionary from [github.com/atebits/Words](https://github.com/atebits/Words), which is not the same as the official dictionary used on the programme. Proper solution to this discrepancy is to use list of words from  Oxford dictionary, but as far as I'm aware such a list is not available for download (it of course also needs to be licensed). When in doubt I would suggest consulting OED's official site.
+Letters puzzle solver relies on a dictionary from [github.com/dwyl/english-words](https://github.com/dwyl/english-words), which is not the same as the official dictionary used on the programme. Proper solution to this discrepancy is to use list of words from  Oxford dictionary, but as far as I'm aware such a list is not available for download (it of course also needs to be licensed). When in doubt I would suggest consulting OED's official site.
 
 ## Usage
 

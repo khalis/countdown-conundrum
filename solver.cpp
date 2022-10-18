@@ -6,16 +6,16 @@
 #include <bitset>
 #include <sstream>
 #include "solver.h"
-#include "dictionary/dictionary.h"
+// #include "dictionary/dictionary.h"
 
-extern const char* dictionary;
+// extern const char* dictionary;
 
 hash_t hash(const string &str) {
     hash_t result = 0;
     for (auto ch: str) {
         if (ch == '-') ch = 26;
         else ch = 'z' - ch;
-        result |= (1u << static_cast<unsigned char>(ch));
+        result |= (1ull << static_cast<unsigned char>(ch));
     }
     return result;
 }
@@ -44,10 +44,11 @@ bool check(const string &conundrum, const string &candidate) {
 }
 
 Solver::Solver() {
-//    std::ifstream is{file_name};
-    std::istringstream is{dictionary};
+    const char* file_name = "../../words_alpha.txt";
+    std::ifstream is{file_name};
+    // std::istringstream is{dictionary};
     std::istream_iterator<string> first{is}, last;
-    words.reserve(250'000);
+    words.reserve(370'100);
     for (auto word = first; word != last; ++word) {
         words.push_back({hash(*word), *word});
     }
