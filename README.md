@@ -13,47 +13,33 @@ To solve letter puzzle just type the letters in lower case with no spaces and hi
 Example:
 ```
 Enter puzzle: ewabejsru
-Found 223 solutions
-
+Found 306 solutions
 
 7
-abjures bewares bajrees
+abjures bewares reabuse
 
 6
-abjure jabers urease busera bursae beware beares reseau baseej bajree webers abuser
+bajree abusee jabers abjure abuser beware brujas rebase bursae busera reseau erebus webers subjee subwar urease weaser
 
 5
-braws sawer bears urase ursae sujee beers rebus beres wares besaw jeers sweer easer braes beaus brees rajes brews warbs sware swear jubas buras bursa burse jubes abuse resaw saber weber sabre aures wears ewers ureas waurs sewer sewar seare bajus rubes bares beare erase bawrs resew suber saree baser baurs reuse
+barse brees besew besra baser baure rajes rubes ewers bears resue aures beaus awber jebus brews beers braes bruja reuse buras bursa sabre burse rebus resew abrus jeers easer resaw jubas erase braws saree sawer serab serau seraw sewar absee suber bares subra abuse sware swear sweer swure sewer ureas saber ursae wares warse wears jubes weber urase
 
 4
-jeer seer jube jabs jars jaws juba urbs jews swee jees rees sabe ruse rusa rues suba rubs rube rews sere suer jura rebs sera sear sura raws sure rase swab jure wase brae ware bere bees beer wars beau bear bawr baur arbs base bras bars bare waur baju awes awee wear webs ares arse arew wabs urea ewes ewer ures eres ursa eras were user eaus wees ease braw ears ajee waes weer burs bura warb brus brew bree
-Enter puzzle:
+jear besa rube brae bras bree brew reub juba bura braw bure burs erse esau jura jeer rebs ajee sabe eure ears ease arbs jees ares arew rees jere eras jews jesu arse jube sare ewer saur ruse sear seba seer sera ewes aube rues serb sere raws awee suba awes subj rubs rusa rase suer sura sure suwe swab bare bars baru jabs base urbs urea jars bear ursa beau usar usee user wabe wabs waer waes warb ware jure wars beer wase waur wear bees beja jaws bere webs weer wees were wese
 ```
 
 To solve numbers puzzle type all numbers with spaces in between, with the goal as the last number. Solver will print first 10 solutions, if found.
 ```
 Enter puzzle: 25 100 1 7 9 5 729
-Found at least 10 solutions
- 1) 729 = 5+7*100-1+25
- 2) 729 = 5+100*7-1+25
- 3) 729 = 25+7*100-1+5
- 4) 729 = 25+100*7-1+5
- 5) 729 = 9+7*100-5+25
- 6) 729 = 9+100*7-5+25
- 7) 729 = 25+7*100-5+9
- 8) 729 = 25+100*7-5+9
- 9) 729 = 7*(9-5+100)+1
-10) 729 = 7*(100-5+9)+1
-Enter puzzle:
+Found 13 solutions, here are 10:
+25+(9-1)*(100-(7+5)) = 729
+9*(100+1)-(5+25*7) = 729
+9+(7-1)*(25+100-5) = 729
+9*(100-(25-(1+5))) = 729
+9*(100-(1+25-7)) = 729
+1+7*(100-(25/5)+9) = 729
+1+7*(100-5+9) = 729
+5*(7*25-9)-(1+100) = 729
+9*(5+7*25-100+1) = 729
+25+5+7*100-1 = 729
 ```
-
-This solver needs some work -- solutions are often repeated (well, they are not identical from computers stand point, but they are same for a human), and the whole thing might be faster.
-
-## Compilation
-
-Requires [{fmt}](https://github.com/fmtlib/fmt) for compilation. [vcpkg](https://github.com/Microsoft/vcpkg) is good for installing libraries.
-
-## Acknowledgements
-* [{fmt}](https://github.com/fmtlib/fmt) is great
-* [combinations library](https://github.com/HowardHinnant/combinations) from @HowardHinnant is amazing
-* [word list](https://github.com/atebits/Words) from @atebits is indispensable
