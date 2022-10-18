@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <format>
+#include <functional>
 
 constexpr char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
 
@@ -26,7 +27,6 @@ struct Node {
     bool operator==(const Node& rhs) const;
     Node operator-();
 
-
 };
 
 Node operator+(const Node& a, const Node& b);
@@ -44,4 +44,16 @@ struct std::formatter<Node> : std::formatter<std::string> {
         return std::formatter<std::string>::format(node.to_string(), fc);
     }
 };
+
+enum class Iteration { carry_on, finish };
+enum class Traversal { pre, in, post };
+
+void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal order = Traversal::post);
+void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order = Traversal::post);
+void deep_copy(SNode& from, SNode& to);
+
+
+
+
+
 

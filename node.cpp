@@ -102,6 +102,33 @@ Node Node::operator-(){
     return *this;
 }
 
+void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal order = Traversal::post){
+    if(!root) return;
+
+    if(order == Traversal::pre && fn(root) == Iteration::finish) return;
+    traverse(root->left, fn, order);
+    if(order == Traversal::in && fn(root) == Iteration::finish) return;
+    traverse(root->right, fn, order);
+    if(order == Traversal::post && fn(root) == Iteration::finish) return;
+}
+
+void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order = Traversal::post){
+    if(!one || !two) return;
+
+    if(order == Traversal::pre && fn(one, two) == Iteration::finish) return;
+    sync_traverse(one->left, two->left, fn, order);
+    if(order == Traversal::in && fn(one, two) == Iteration::finish) return;
+    sync_traverse(one->right, two->right, fn, order);
+    if(order == Traversal::post && fn(one, two) == Iteration::finish) return;
+}
+
+void deep_copy(SNode& from, SNode& to){
+    if(!from) return;
+    to = std::make_shared<Node>(*from);
+    deep_copy(from->left, to->left);
+    deep_copy(from->right, to->right);
+}
+
 Node operator+(const Node& a, const Node& b){ return Node( Node::add, a, b ); }
 Node operator-(const Node& a, const Node& b){ return Node( Node::sub, a, b ); }
 Node operator*(const Node& a, const Node& b){ return Node( Node::mul, a, b ); }
