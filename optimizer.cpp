@@ -151,18 +151,26 @@ void winnow_solutions(std::vector<Solution>& solutions){
 
     Transformation all_transformations[] = {
          a - b        >> a + ( _1 * b),
-        _1 * ( a * b) >> (_1 * a) * b,
-        _1 * ( a / b) >> (_1 * a) / b,
-        _1 * ( a + b) >> (_1 * a) + (_1 * b),
-        _1 * lit      >> -lit
+        _1 * (a * b)      >> (_1 * a) * b,
+             (a * b) * _1 >> (_1 * a) * b,
+        _1 * (a / b)      >> (_1 * a) / b,
+             (a / b) * _1 >> (_1 * a) / b,
+        _1 * (a + b)      >> (_1 * a) + (_1 * b),
+             (a + b) * _1 >> (_1 * a) + (_1 * b),
+                 lit * _1 >> -lit,
+            _1 * lit      >> -lit,
+            1 * a         >> a,
+            a * 1         >> a
     };
     for(auto& sol: solutions){
         SNode node = std::make_shared<Node>(build_node(sol));
 
         while(true){
             auto transformed = 0;
-            for(const auto& transformation: all_transformations)
+            for(const auto& transformation: all_transformations){
+                sort_nodes(node);
                 transformed += transform(node, transformation);
+            }
             if(!transformed) break;
         }
         evaluate_node(node);
