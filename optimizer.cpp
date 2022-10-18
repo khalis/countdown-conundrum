@@ -50,16 +50,16 @@ bool transform(SNode& node, const Transformation& transform){
     struct Match {
         SNode matched_node;
         std::map<int, SNode> captures;
-        Match(SNode nd): matched_node(std::move(nd)){}
+        // Match(SNode nd): matched_node(std::move(nd)){}
     };
     std::vector<Match> matches;
-    traverse(node, [&pattern = pattern, &matches](SNode& nd){
+    traverse(node, [&pattern, &matches](SNode& nd){
         if(*nd == *pattern) matches.emplace_back(nd);
         return Iteration::carry_on;
     });
 
     for(auto& [matched, captures]: matches){
-        sync_traverse(pattern, matched, [&captures = captures](SNode& pattern, SNode& matched){
+        sync_traverse(pattern, matched, [&captures](SNode& pattern, SNode& matched){
             if(pattern->type == Node::glob_var || pattern->type == Node::glob_num)
                 captures.insert({pattern->value, matched});
             return Iteration::carry_on;
@@ -68,7 +68,7 @@ bool transform(SNode& node, const Transformation& transform){
         auto new_node = std::make_shared<Node>(*replace);
         deep_copy(replace, new_node);
 
-        traverse(new_node, [&captures = captures](SNode& nd){
+        traverse(new_node, [&captures](SNode& nd){
             if(nd->type == Node::glob_var || nd->type == Node::glob_num){
                 if(captures.contains(nd->value)) nd = captures.at(nd->value);
                 else if(captures.contains(-nd->value)) {
