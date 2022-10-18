@@ -44,7 +44,7 @@ bool check(const string &conundrum, const string &candidate) {
 }
 
 Solver::Solver() {
-    const char* file_name = "../../words_alpha.txt";
+    const char* file_name = "words_alpha.txt";
     std::ifstream is{file_name};
     // std::istringstream is{dictionary};
     std::istream_iterator<string> first{is}, last;
