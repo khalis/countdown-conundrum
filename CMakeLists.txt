@@ -5,7 +5,6 @@ project(countdown_game)
 set(CMAKE_CXX_STANDARD 20)
 
 set(source_files
-    conundrums.cpp
     solver.h
     solver.cpp
     fast_num.h
@@ -17,4 +16,6 @@ set(source_files
     printing.hpp
     utility.h
 )
-add_executable(conundrums ${source_files})
+add_executable(conundrums conundrums.cpp ${source_files})
+
+add_executable(check_parens check_parens.cpp ${source_files})
