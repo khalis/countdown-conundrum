@@ -27,6 +27,11 @@ inline void print(){
     std::cout << std::endl;
 }
 
+inline std::string count(size_t number, const std::string& common, const std::string& singular, const std::string& plural){
+    if(number == 1) return std::to_string(number) + common + singular;
+    return std::to_string(number) + common + plural;
+}
+
 struct printer{
     using SV = std::string_view;
     printing_format format;
