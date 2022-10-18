@@ -3,12 +3,13 @@
 #include <iostream>
 #include <format>
 #include <string_view>
+#include <string>
 
 
 struct printing_format {
-    const std::string_view prefix;
-    const std::string_view delimiter;
-    const std::string_view postfix;
+    const std::string prefix;
+    const std::string delimiter;
+    const std::string postfix;
 };
 
 template <typename... Args>
@@ -31,7 +32,8 @@ struct printer{
     printing_format format;
     bool first_use = true;
 
-    printer(SV prefix, SV delimiter, SV postfix): format{prefix, delimiter, postfix} {}
+    printer(SV prefix, SV delimiter, SV postfix): 
+        format{std::string(prefix), std::string(delimiter), std::string(postfix)} {}
     ~printer(){ std::cout << format.postfix; }
 
     template <typename... Args>
