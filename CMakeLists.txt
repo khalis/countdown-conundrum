@@ -10,6 +10,10 @@ set(source_files
     solver.cpp
     fast_num.h
     fast_num.cpp
+    node.h
+    node.cpp
+    optimizer.h
+    optimizer.cpp
     printing.hpp
     utility.h
 )

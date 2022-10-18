@@ -8,6 +8,7 @@
 #include "solver.h"
 #include "printing.hpp"
 #include "fast_num.h"
+#include "optimizer.h"
 
 static auto now = std::chrono::steady_clock::now;
 using std::chrono::duration;
@@ -15,7 +16,7 @@ using std::chrono::duration;
 void words_conundrum(Solver &solver, const std::string &conundrum) {
     std::vector<string> result = solver(conundrum);
 
-    print("Found {} solutions", result.size());
+    print("Found {}", count(result.size(), " solution", "", "s"));
 
     if (result.empty()) return;
 
@@ -51,12 +52,15 @@ void numbers_conundrum(std::array<int, 7> input, bool verbose = false){
 
     auto start = now();
     auto solutions = search(numbers, goal);
-    print("In {} found {} candidates\n", duration<double>(now() - start), solutions.size() );
+    print("In {} found {}\n", duration<double>(now() - start), count(solutions.size(), " candidate", "", "s"));
     validate(solutions);
-    print("After validation left with {} solutions\n", solutions.size() );
+    print("After validation left with {}\n", count(solutions.size(), " candidate", "", "s"));
     optimize(solutions);
-    print("After optimization left with {} solutions\n", solutions.size() );
+    print("After optimization left with {}\n", count(solutions.size(), " candidate", "", "s"));
+    winnow_solutions(solutions);
+    print("After winnowing left with {}\n", count(solutions.size(), " candidate", "", "s"));
     // std::cin.get();
+    std::ranges::sort(solutions, {}, &Solution::ind);
     if (verbose){
         for(auto &sol: solutions) {
             print("{}, 0b{:b}, ", sol.ind, sol.expression);
