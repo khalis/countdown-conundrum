@@ -7,16 +7,9 @@
 #include <optional>
 
 #include "node.h"
-#include "../cpppad/printing.hpp"
-
-
-struct Solution{
-    size_t ind;
-    size_t expression;
-    std::array<int, 6> numbers;
-    std::array<size_t, 5> operations;
-    std::string infix;
-};
+#include "printing.hpp"
+#include "optimizer.h"
+#include "utility.h"
 
 std::vector<bool> expr_to_vec(size_t expr){
     std::vector<bool> result;
@@ -30,13 +23,7 @@ std::vector<bool> expr_to_vec(size_t expr){
     return result;
 }
 
-template<typename T>
-auto double_pop(T &vec) -> std::pair<typename T::value_type, typename T::value_type> {
-    auto a = vec.back(); vec.pop_back();
-    auto b = vec.back(); vec.pop_back();
-    return std::make_pair(a, b);
-}
-Node build_node(Solution& solution){
+Node build_node(const Solution& solution){
     std::vector<Node> stack;
     auto number = begin(solution.numbers);
     auto operation = begin(solution.operations);    
@@ -53,44 +40,6 @@ Node build_node(Solution& solution){
     }
     return stack.back();
 }
-
-enum class Iteration { carry_on, finish };
-
-enum class Traversal { pre, in, post };
-
-
-
-void traverse(SNode& root, const std::function<Iteration(SNode&)>& fn, Traversal order = Traversal::post){
-    if(!root) return;
-
-    if(order == Traversal::pre && fn(root) == Iteration::finish) return;
-    traverse(root->left, fn, order);
-    if(order == Traversal::in && fn(root) == Iteration::finish) return;
-    traverse(root->right, fn, order);
-    if(order == Traversal::post && fn(root) == Iteration::finish) return;
-}
-
-void sync_traverse(SNode& one, SNode& two, std::function<Iteration(SNode&, SNode&)> fn, Traversal order = Traversal::post){
-    if(!one || !two) return;
-
-    if(order == Traversal::pre && fn(one, two) == Iteration::finish) return;
-    sync_traverse(one->left, two->left, fn, order);
-    if(order == Traversal::in && fn(one, two) == Iteration::finish) return;
-    sync_traverse(one->right, two->right, fn, order);
-    if(order == Traversal::post && fn(one, two) == Iteration::finish) return;
-}
-
-void deep_copy(SNode& from, SNode& to){
-    if(!from) return;
-    to = std::make_shared<Node>(*from);
-    deep_copy(from->left, to->left);
-    deep_copy(from->right, to->right);
-}
-
-struct Transformation {
-    SNode pattern;
-    SNode replace;
-};
 
 Transformation operator>>(const Node& pattern, const Node& replace){
     return {std::make_shared<Node>(pattern), std::make_shared<Node>(replace)};
@@ -191,16 +140,7 @@ void sort_nodes(SNode& root){
     }
 }
 
-int main(){
-    auto solutions = std::to_array<Solution>({
-        {68,  0b1001100111, {10, 100, 8, 5, 5, 75}, {1, 2, 3, 1, 1}, ""}, // "(((100-8)*10)-(5/5))-75"
-        {40,  0b110100111,  {10, 100, 8, 75, 5, 5}, {1, 2, 1, 3, 1}, ""}, // "(((100-8)*10)-75)-(5/5)"
-        {56,  0b11100111,   {10, 100, 8, 75, 5, 5}, {1, 2, 3, 0, 1}, ""}, // "((100-8)*10)-(75+(5/5))"
-        {80,  0b1010001111, {8, 7, 6, 100, 50, 6},  {0, 2, 2, 1, 3}, ""},
-        {81,  0b1010001111, {7, 8, 6, 100, 50, 6},  {0, 2, 2, 1, 3}, ""},
-        {112, 0b1010011011, {6, 100, 7, 8, 50, 6},  {0, 2, 2, 1, 3}, ""}
-    });
-
+void winnow_solutions(std::vector<Solution>& solutions){
     Node a = Node('a');
     Node b = Node('b');
     Node _1 = Node(-1);
@@ -214,11 +154,8 @@ int main(){
         _1 * lit      >> -lit
     };
 
-    using std::ranges::take_view;
-    // for(auto sol: take_view{solutions, 1}){
-    for(auto sol: solutions){
+    for(auto& sol: solutions){
         SNode node = std::make_shared<Node>(build_node(sol));
-        auto node_before = node->to_string();
 
         while(true){
             auto transformed = 0;
@@ -228,7 +165,50 @@ int main(){
         }
         evaluate_node(node);
         sort_nodes(node);
-        print("{: <30} -> {: <30}", node_before, *node);
+        sol.infix = node->to_string();
     }
-    return 0;
+    const auto [first, last] = std::ranges::unique(solutions, {}, &Solution::infix);
+    solutions.erase(first, last);
 }
+
+// int main(){
+//     auto solutions = std::to_array<Solution>({
+//         {68,  0b1001100111, {10, 100, 8, 5, 5, 75}, {1, 2, 3, 1, 1}, ""}, // "(((100-8)*10)-(5/5))-75"
+//         {40,  0b110100111,  {10, 100, 8, 75, 5, 5}, {1, 2, 1, 3, 1}, ""}, // "(((100-8)*10)-75)-(5/5)"
+//         {56,  0b11100111,   {10, 100, 8, 75, 5, 5}, {1, 2, 3, 0, 1}, ""}, // "((100-8)*10)-(75+(5/5))"
+//         {80,  0b1010001111, {8, 7, 6, 100, 50, 6},  {0, 2, 2, 1, 3}, ""},
+//         {81,  0b1010001111, {7, 8, 6, 100, 50, 6},  {0, 2, 2, 1, 3}, ""},
+//         {112, 0b1010011011, {6, 100, 7, 8, 50, 6},  {0, 2, 2, 1, 3}, ""}
+//     });
+
+//     Node a = Node('a');
+//     Node b = Node('b');
+//     Node _1 = Node(-1);
+//     Node lit = Node(Node::glob_num);
+
+//     Transformation all_transformations[] = {
+//          a - b        >> a + ( _1 * b),
+//         _1 * ( a * b) >> (_1 * a) * b,
+//         _1 * ( a / b) >> (_1 * a) / b,
+//         _1 * ( a + b) >> (_1 * a) + (_1 * b),
+//         _1 * lit      >> -lit
+//     };
+
+//     // using std::ranges::take_view;
+//     // for(auto sol: take_view{solutions, 1}){
+//     for(auto sol: solutions){
+//         SNode node = std::make_shared<Node>(build_node(sol));
+//         auto node_before = node->to_string();
+
+//         while(true){
+//             auto transformed = 0;
+//             for(const auto& transformation: all_transformations)
+//                 transformed += transform(node, transformation);
+//             if(!transformed) break;
+//         }
+//         evaluate_node(node);
+//         sort_nodes(node);
+//         print("{: <30} -> {: <30}", node_before, *node);
+//     }
+//     return 0;
+// }
