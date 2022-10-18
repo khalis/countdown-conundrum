@@ -1,8 +1,16 @@
 #include <regex>
 #include <ranges>
+#include <array>
+#include <vector>
+#include <chrono>
+#include <iterator>
 
 #include "solver.h"
 #include "printing.hpp"
+#include "fast_num.h"
+
+static auto now = std::chrono::steady_clock::now;
+using std::chrono::duration;
 
 void words_conundrum(Solver &solver, const std::string &conundrum) {
     std::vector<string> result = solver(conundrum);
@@ -27,6 +35,40 @@ void words_conundrum(Solver &solver, const std::string &conundrum) {
     std::cout << std::endl;
 }
 
+void numbers_conundrum(std::array<int, 7> input, bool verbose = false){
+
+    std::array<int, 6> numbers;
+    auto goal = input.back();
+    copy(begin(input), prev(end(input)), begin(numbers));
+
+    sort(begin(numbers), end(numbers), std::greater{});
+
+    for(auto prn = printer("=====\n", " ", std::format(" = {}\n", goal)); auto n : numbers) prn(n);
+
+    if(auto res = std::find(begin(numbers), end(numbers), goal); res != end(numbers))
+        print("There is at least one trivial solution, {}", *res);
+
+
+    auto start = now();
+    auto solutions = search(numbers, goal);
+    print("In {} found {} candidates\n", duration<double>(now() - start), solutions.size() );
+    validate(solutions);
+    print("After validation left with {} solutions\n", solutions.size() );
+    optimize(solutions);
+    print("After optimization left with {} solutions\n", solutions.size() );
+    // std::cin.get();
+    if (verbose){
+        for(auto &sol: solutions) {
+            print("{}, 0b{:b}, ", sol.ind, sol.expression);
+            for(auto prn = printer("{",", ","}, "); auto i: sol.numbers) prn(i);
+            for(auto prn = printer("{",", ","}, "); auto op: sol.operations) prn(op);
+            print("\"{}\"\n", sol.infix);
+        }
+
+    }
+    else for(auto &sol: solutions) print("{}) {}={}\n", sol.ind, sol.infix, goal);
+}
+
 int main() {
 //     using std::chrono::duration;
     using namespace std;
@@ -41,9 +83,11 @@ int main() {
         if (regex_match(line, regex{"[^[:digit:]]+"}))
             words_conundrum(solver, line);
         else{
-            // auto start = now();
-            // number_conundrum(line);
-            // print("Done in {}\n", duration<double>(now()-start));
+            std::istringstream input{line};
+            std::istream_iterator<int> first{input};
+            std::array<int, 7> numbers;
+            copy_n(first, 7, begin(numbers));
+            numbers_conundrum(numbers);
         }
 
     }
