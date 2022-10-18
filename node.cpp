@@ -69,13 +69,36 @@ std::string Node::to_string() const {
         }
         return ""s;
     });
-    auto child_with_parenthesis = [&](const Node* nd){
-        if(!nd) return ""s;
-        if(!nd->is_operator()) return nd->to_string();
-        if(nd->type == this->type && (nd->type == Node::add || nd->type == Node::mul)) return nd->to_string();
-        else return format("({})", nd->to_string());
+
+    auto add_parens_for_left = [&](const Node& left){
+        if(!left.is_operator()) return left.to_string();
+        switch (this->type) {
+            case Node::add:
+            case Node::sub: return left.to_string();
+            case Node::mul: if(left.type == Node::mul) return left.to_string();
+            case Node::div: if(left.type == Node::div) return left.to_string();
+            default: return std::format("({})", left.to_string());
+        }
     };
-    return child_with_parenthesis(left.get()) + str + child_with_parenthesis(right.get());
+
+    auto add_parens_for_right = [&](const Node& right){
+        if(!right.is_operator()) return right.to_string();
+        switch (this->type) {
+            case Node::add: return right.to_string();
+            case Node::sub: 
+                if(right.type == Node::add || right.type == Node::sub) return std::format("({})", right.to_string());
+                else return right.to_string();
+            case Node::mul: if(right.type == Node::mul) return right.to_string();
+            case Node::div: if(right.type == Node::div) return right.to_string();
+            default: return std::format("({})", right.to_string());
+        }
+    };
+
+    auto left_str = left? add_parens_for_left(*left) : ""s;
+    auto right_str = right? add_parens_for_right(*right) : ""s;
+    str = left_str + str + right_str;
+    if(this->type == Node::div) return std::format("({})", str);
+    else return str;
 }
 
 bool Node::is_operator() const {
