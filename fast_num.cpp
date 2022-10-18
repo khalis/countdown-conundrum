@@ -83,7 +83,7 @@ vector<Solution> validate(vector<Solution> &solutions){
             auto [b, a] = double_pop(stack);
 
             auto res = operation.function(a.value, b.value);
-            if(!res) return true; // function evaluation wasn't valid: eg div by zero, or float div
+            if(!res || res.value() < 0) return true; // function evaluation wasn't valid: eg div by zero, or float div
 
             if(operation.as_char == '+' || operation.as_char == '*')
                 if (a.value < b.value) std::swap(a, b);
