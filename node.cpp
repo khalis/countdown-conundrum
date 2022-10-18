@@ -72,6 +72,7 @@ std::string Node::to_string() const {
     auto child_with_parenthesis = [&](const Node* nd){
         if(!nd) return ""s;
         if(!nd->is_operator()) return nd->to_string();
+        if(nd->type == this->type && (nd->type == Node::add || nd->type == Node::mul)) return nd->to_string();
         else return format("({})", nd->to_string());
     };
     return child_with_parenthesis(left.get()) + str + child_with_parenthesis(right.get());
