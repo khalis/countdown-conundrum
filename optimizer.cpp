@@ -50,11 +50,18 @@ bool transform(SNode& node, const Transformation& transform){
     struct Match {
         SNode matched_node;
         std::map<int, SNode> captures;
-        // Match(SNode nd): matched_node(std::move(nd)){}
     };
     std::vector<Match> matches;
     traverse(node, [&pattern, &matches](SNode& nd){
         if(*nd == *pattern) matches.emplace_back(nd);
+        else{
+            if(nd->is_commutative()){
+                nd->left.swap(nd->right);
+                if (*nd == *pattern) matches.emplace_back(nd);
+                else nd->left.swap(nd->right);
+            }
+
+        }
         return Iteration::carry_on;
     });
 
@@ -151,15 +158,10 @@ void winnow_solutions(std::vector<Solution>& solutions){
     Transformation all_transformations[] = {
          a - b        >> a + ( _1 * b),
         _1 * (a * b)      >> (_1 * a) * b,
-             (a * b) * _1 >> (_1 * a) * b,
         _1 * (a / b)      >> (_1 * a) / b,
-             (a / b) * _1 >> (_1 * a) / b,
         _1 * (a + b)      >> (_1 * a) + (_1 * b),
-             (a + b) * _1 >> (_1 * a) + (_1 * b),
-                 lit * _1 >> -lit,
             _1 * lit      >> -lit,
-            1 * a         >> a,
-            a * 1         >> a
+            1 * a         >> a
     };
     for(auto& sol: solutions){
         SNode node = std::make_shared<Node>(build_node(sol));

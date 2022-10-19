@@ -24,6 +24,7 @@ struct Node {
     
     std::string to_string() const;
     bool is_operator() const;
+    bool is_commutative() const;
     bool operator==(const Node& rhs) const;
     Node operator-();
 

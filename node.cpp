@@ -108,6 +108,11 @@ bool Node::is_operator() const {
         || type == Node::mul
         || type == Node::div;
 }
+bool Node::is_commutative() const {
+    assert(this && "Node::is_commutative() called with nullptr _this_");
+    return type == Node::add
+        || type == Node::mul;
+}
 
 bool Node::operator== (const Node& rhs) const {
     assert(this && "Node::operator==() called with nullptr _this_");
