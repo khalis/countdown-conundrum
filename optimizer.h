@@ -15,10 +15,10 @@ Node build_node(const Solution& solution);
 
 struct Transformation {
     SNode pattern;
-    SNode replace;
+    SNode replacement;
 };
 
-Transformation operator>>(const Node& pattern, const Node& replace);
+Transformation operator>>(const Node& pattern, const Node& replacement);
 
 
 bool transform(SNode& node, const Transformation& transform);

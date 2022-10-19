@@ -41,12 +41,12 @@ Node build_node(const Solution& solution){
     return stack.back();
 }
 
-Transformation operator>>(const Node& pattern, const Node& replace){
-    return {std::make_shared<Node>(pattern), std::make_shared<Node>(replace)};
+Transformation operator>>(const Node& pattern, const Node& replacement){
+    return {std::make_shared<Node>(pattern), std::make_shared<Node>(replacement)};
 }
 
 bool transform(SNode& node, const Transformation& transform){
-    auto [pattern, replace] = transform;
+    auto [pattern, replacement] = transform;
     struct Match {
         SNode matched_node;
         std::map<int, SNode> captures;
@@ -71,8 +71,8 @@ bool transform(SNode& node, const Transformation& transform){
                 captures.insert({pattern->value, matched});
         });
 
-        auto new_node = std::make_shared<Node>(*replace);
-        deep_copy(replace, new_node);
+        auto new_node = std::make_shared<Node>(*replacement);
+        deep_copy(replacement, new_node);
 
         traverse(new_node, [&captures](SNode& nd){
             if(nd->type == Node::glob_var || nd->type == Node::glob_num){
