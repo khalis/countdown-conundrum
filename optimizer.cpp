@@ -152,16 +152,15 @@ void sort_nodes(SNode& root){
 void winnow_solutions(std::vector<Solution>& solutions){
     Node a = Node('a');
     Node b = Node('b');
-    Node _1 = Node(-1);
     Node lit = Node(Node::glob_num);
 
     Transformation all_transformations[] = {
-         a - b        >> a + ( _1 * b),
-        _1 * (a * b)      >> (_1 * a) * b,
-        _1 * (a / b)      >> (_1 * a) / b,
-        _1 * (a + b)      >> (_1 * a) + (_1 * b),
-            _1 * lit      >> -lit,
-            1 * a         >> a
+         a - b        >> a + ( -1 * b),
+        -1 * (a * b)  >> (-1 * a) * b,
+        -1 * (a / b)  >> (-1 * a) / b,
+        -1 * (a + b)  >> (-1 * a) + (-1 * b),
+            -1 * lit  >> -lit,
+            1 * a     >> a
     };
     for(auto& sol: solutions){
         SNode node = std::make_shared<Node>(build_node(sol));
