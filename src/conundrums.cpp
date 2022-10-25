@@ -46,6 +46,10 @@ void numbers_conundrum(std::array<int, 7> input, bool verbose = false){
     validate(solutions);
     optimize(solutions);
     winnow_solutions(solutions);
+    if(solutions.size() == 0) {
+        print("Did not find any solutions.");
+        return;
+    }
     print("Found {}\n", count(solutions.size(), " solution", ", here it is:", "s, here are 10:"));
     auto take_10 = std::ranges::views::take(10);
     for(auto &sol: solutions | take_10)
